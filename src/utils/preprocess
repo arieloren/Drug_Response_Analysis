@@ -1,0 +1,30 @@
+import pandas as pd 
+import numpy as  np 
+from pathlib import Path
+
+
+def concat_metadata_with_gene_expression(metadata, gen_df, filter_nan_target=True):
+    """
+    Transposes the gene expression DataFrame, merges it with metadata, 
+    and optionally drops rows with missing values in the 'Response status' column.
+    Parameters:
+    - metadata (DataFrame): A DataFrame containing sample metadata with a 'SampleID' column.
+    - gen_df (DataFrame): A gene expression DataFrame that includes an 'ID_REF' column.
+    - filter_nan_target (bool): If True, drop rows where 'Response status' is NaN.
+    
+    Returns:
+    - merged_df (DataFrame): The merged DataFrame after transposition and filtering.
+    """
+    # Transpose the gene expression DataFrame and reset index
+    df_transposed = gen_df.set_index('ID_REF').T.reset_index()
+    # Rename the transposed index column to 'SampleID'
+    df_transposed.rename(columns={'index': 'SampleID'}, inplace=True)
+    
+    # Merge the transposed gene expression data with metadata on 'SampleID'
+    merged_df = pd.merge(df_transposed, metadata, on='SampleID', how='inner')
+    
+    # Optionally drop rows where 'Response status' is missing
+    if filter_nan_target:
+        merged_df = merged_df.dropna(subset=["Response status"])
+    
+    return merged_df
