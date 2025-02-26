@@ -31,7 +31,7 @@ def concat_metadata_with_gene_expression(metadata, gen_df, filter_nan_target=Tru
     
     return merged_df
 
-def prepare_dataset_for_feature_selection(df):
+def prepare_dataset_for_feauture_selection(df):
     """
     Prepares the dataset for feature selection by:
     - Converting the "Response status" column to binary values (1 = Responder, 0 = Non-responder).
@@ -47,18 +47,18 @@ def prepare_dataset_for_feature_selection(df):
     """
     
     # Convert Response status to binary (1 = Responder, 0 = Non-responder)
-    df["Response status"] = df["Response status"].map({"Responder": 1, "Non_responder": 0})
+    temp_df = df.copy()
+    temp_df["Response status"] = temp_df["Response status"].map({"Responder": 1, "Non_responder": 0})
 
     # Separate features (X) and target variable (y)
-    X = df.drop(columns=["Response status"])
-    y = df["Response status"].astype(int)
+    X = temp_df.drop(columns=["Response status"])
+    y = temp_df["Response status"].astype(int)
 
     # Drop irrelevant columns
     drop_cols = ["SampleID", "Tissue", "disease state", "protocol", "disease activity score (das28)", "Gender"]
     X = X.drop(columns=drop_cols, errors="ignore")
     
-    return X, y
-
+    return  X, y
 
 def normalize_features(X):
     """
