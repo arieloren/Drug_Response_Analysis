@@ -52,7 +52,7 @@ def prepare_dataset_for_feature_selection(df):
     y = temp_df["Response status"].astype(int)
 
     # Drop irrelevant columns
-    drop_cols = ["SampleID", "Tissue", "disease state", "protocol"]
+    drop_cols = ["SampleID", "Tissue", "disease state",'protocol']
     
     # drop_cols += ["disease activity score (das28)", "Gender"]
 
@@ -61,21 +61,22 @@ def prepare_dataset_for_feature_selection(df):
     return  X, y
 
 def normalize_features(X):
-    """
-    Standardizes gene expression values (Z-score normalization) while excluding categorical features.
-    
-    Parameters:
-    X (pd.DataFrame): The feature matrix containing both numerical and categorical features.
-    
-    Returns:
-    X_transformed (pd.DataFrame): A DataFrame where numerical features are normalized, and categorical ones are untouched.
-    """
     scaler = StandardScaler()
-
-    X_scaled = X.copy()
-
-    X_scaled = scaler.fit_transform(X)
     
+    # Separate 'Gender' column if it exists
+    gender_col = X['Gender'] if 'Gender' in X else None
+    
+    # Drop 'Gender' before scaling
+    X_numeric = X.drop(columns=['Gender'], errors='ignore')
+
+    # Scale only numerical features
+    X_scaled = pd.DataFrame(scaler.fit_transform(X_numeric), 
+                            columns=X_numeric.columns, 
+                            index=X.index)
+
+    # Add 'Gender' column back if it was removed
+    if gender_col is not None:
+        X_scaled['Gender'] = gender_col.map({"Male": 1, "Female": 0}).astype(int)  # Simple binary encoding
     return X_scaled
 
 
