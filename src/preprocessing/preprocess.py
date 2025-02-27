@@ -1,10 +1,6 @@
 import pandas as pd
-import numpy as np
-from sklearn.linear_model import LogisticRegressionCV
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-import time
+
 def concat_metadata_with_gene_expression(metadata, gen_df, filter_nan_target=True):
     """
     Transposes the gene expression DataFrame, merges it with metadata, 
@@ -31,7 +27,7 @@ def concat_metadata_with_gene_expression(metadata, gen_df, filter_nan_target=Tru
     
     return merged_df
 
-def prepare_dataset_for_feature_selection(df,include_metadata_Features=False):
+def prepare_dataset_for_feature_selection(df):
     """
     Prepares the dataset for feature selection by:
     - Converting the "Response status" column to binary values (1 = Responder, 0 = Non-responder).
@@ -58,8 +54,7 @@ def prepare_dataset_for_feature_selection(df,include_metadata_Features=False):
     # Drop irrelevant columns
     drop_cols = ["SampleID", "Tissue", "disease state", "protocol"]
     
-    if not include_metadata_Features:
-        drop_cols += ["disease activity score (das28)", "Gender"]
+    # drop_cols += ["disease activity score (das28)", "Gender"]
 
     X = X.drop(columns=drop_cols, errors="ignore")
     
@@ -84,43 +79,3 @@ def normalize_features(X):
     return X_scaled
 
 
-def train_lasso_logistic_regression(X_train, y_train):
-    """
-    Trains a Lasso-regularized Logistic Regression model with cross-validation.
-    """
-    lasso = LogisticRegressionCV(Cs=10, penalty="l1", solver="liblinear", cv=5, random_state=42)
-    lasso.fit(X_train, y_train)
-    return lasso
-
-def get_significant_genes(lasso_model, gene_names):
-    """
-    Extracts significant genes based on non-zero coefficients from Lasso regression.
-    """
-    lasso_coeffs = lasso_model.coef_.flatten()  # Get coefficients
-    important_genes = pd.DataFrame({"Gene": gene_names, "Coefficient": lasso_coeffs})
-    important_genes = important_genes[important_genes["Coefficient"] != 0].sort_values(by="Coefficient", ascending=False)
-    
-    return important_genes
-
-def getting_best_features(X, y,feature_columns,num_features=10):
-    # Step 5: Train Lasso Logistic Regression
-    lasso_model = train_lasso_logistic_regression(X, y)
-
-    # Step 6: Extract significant genes
-    significant_genes = get_significant_genes(lasso_model, feature_columns)
-
-    top_features = significant_genes.reindex(significant_genes['Coefficient'].abs().sort_values(ascending=False).index).head(num_features)
-
-    return top_features.Gene
-
-
-# def evaluate_model(lasso_model, X_test, y_test):
-#     """
-#     Evaluates the trained Lasso Logistic Regression model on test data.
-#     """
-#     y_pred = lasso_model.predict(X_test)
-#     accuracy = accuracy_score(y_test, y_pred)
-#     report = classification_report(y_test, y_pred, target_names=["Non-Responder", "Responder"])
-    
-#     print(f"Model Accuracy: {accuracy:.4f}")
-#     print("Classification Report:\n", report)
