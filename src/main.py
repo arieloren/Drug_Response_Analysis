@@ -7,7 +7,7 @@ from preprocessing.preprocess import concat_metadata_with_gene_expression,prepar
 from preprocessing.feature_selection import getting_best_features
 from sklearn.model_selection import train_test_split
 from models.model_traning import train_xgboost_classifier
-from models.model_evaluation import evaluate_model
+from models.model_evaluation import ModelEvaluator
 
 def main():
     print("🚀 Starting Drug Response Analysis Pipeline...")
@@ -41,13 +41,19 @@ def main():
 
     # 4️⃣ Evaluate Model
     print("📈 Evaluating model...")
-    evaluate_model(model,X_train_scaled,X_val_scaled,y_train,y_val)
-
+    evaluator = ModelEvaluator(
+    model=model,
+    X_train_scaled=X_train_scaled,
+    X_val_scaled=X_val_scaled,
+    y_train=y_train,
+    y_val=y_val
+)
+    evaluator.print_accuracy()
     # # 5️⃣ Explain Model Predictions
     # print("🔍 Explaining model predictions...")
     # explain_model_predictions(model, X_test_selected)
 
-    # print("✅ Pipeline execution completed successfully!")
+    print("✅ Pipeline execution completed successfully!")
 
 if __name__ == "__main__":
     main()
