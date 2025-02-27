@@ -27,8 +27,25 @@ def load_model(model_name="xgboost_model.pkl"):
     
     return model
 
-def evaluate_model(model,X_train_scaled,X_val_scaled,y_train,y_val,generate_report=False):
-    model = load_model()
+def evaluate_model(model=None, X_train_scaled=None, X_val_scaled=None, y_train=None, y_val=None, generate_report=False):
+    """
+    Evaluates the trained model by printing accuracy and classification reports.
+
+    Parameters:
+    model: Trained classifier (XGBoost or other). If None, it will be loaded from disk.
+    X_train_scaled (pd.DataFrame): Scaled training feature matrix.
+    X_val_scaled (pd.DataFrame): Scaled validation feature matrix.
+    y_train (pd.Series): Training labels.
+    y_val (pd.Series): Validation labels.
+    generate_report (bool): If True, prints classification reports.
+    """
+
+    # Load model only if it is not already provided
+    if model is None:
+        from models.model_traning import load_model  # Import inside to avoid circular imports
+        model = load_model()
+        print("Loaded model from disk.")
+
     y_train_pred = model.predict(X_train_scaled)
 
     y_val_pred = model.predict(X_val_scaled)
@@ -51,3 +68,11 @@ def evaluate_model(model,X_train_scaled,X_val_scaled,y_train,y_val,generate_repo
         # Print Reports
         print("Classification Report - Training Data:\n", train_report)
         print("\nClassification Report - Validation Data:\n", val_report)
+
+
+
+
+
+
+
+
