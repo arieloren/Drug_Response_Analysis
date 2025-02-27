@@ -83,7 +83,6 @@ class ModelEvaluator:
         Loads the model from disk if not already provided.
         """
         if self.model is None:
-            from models.model_traning import load_model  # Import inside to avoid circular imports
             self.model = load_model()
             print("Loaded model from disk.")
             

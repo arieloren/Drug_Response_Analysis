@@ -19,13 +19,9 @@ def main():
     df = concat_metadata_with_gene_expression(meta_data,gene_expression,filter_nan_target=True)
     X,y = prepare_dataset_for_feature_selection(df)
 
-    # Step 1: Split into 80% Train, 20% (Val + Test)
-    X_train, X_temp, y_train, y_temp = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
-    )
-    # Step 2: Split the remaining 20% into 10% Validation, 10% Test
-    X_val, X_test, y_val, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.2, random_state=42, stratify=y_temp
+    # Split into 80% Train, 15%
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=0.5, random_state=42, stratify=y
     )
     # 2️⃣ Feature Selection
     print("🧬 Selecting top features...")
@@ -49,10 +45,6 @@ def main():
     y_val=y_val
 )
     evaluator.print_accuracy()
-    # # 5️⃣ Explain Model Predictions
-    # print("🔍 Explaining model predictions...")
-    # explain_model_predictions(model, X_test_selected)
-
     print("✅ Pipeline execution completed successfully!")
 
 if __name__ == "__main__":
