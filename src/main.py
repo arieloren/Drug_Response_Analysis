@@ -6,7 +6,7 @@ from utils.config import base_path
 from preprocessing.preprocess import concat_metadata_with_gene_expression,prepare_dataset_for_feature_selection,normalize_features
 from preprocessing.feature_selection import getting_best_features
 from sklearn.model_selection import train_test_split
-from models.model_traning import train_xgboost_classifier
+from models.model_training import train_xgboost_classifier
 from models.model_evaluation import ModelEvaluator
 
 def main():
