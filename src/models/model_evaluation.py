@@ -212,39 +212,3 @@ class ModelEvaluator:
         plt.show()  # ✅ Ensures the waterfall plot is displayed
 
 
-
-
-    # def evaluate(self, print_accuracy=True, generate_report=False, 
-    #                 plotting_confusion_matrix=False, plot_feature_importances=False,
-    #                 analyze_instance_index=None, top_features=10):
-    #     """
-    #     Main method to evaluate the model with all selected metrics.
-        
-    #     Parameters:
-    #     print_accuracy (bool): If True, prints accuracy metrics
-    #     generate_report (bool): If True, prints classification reports
-    #     plotting_confusion_matrix (bool): If True, plots confusion matrix
-    #     plot_feature_importances (bool): If True, plots feature importances
-    #     top_features (int): Number of top features to display in importance plot
-    #     """
-    #     # Make predictions first
-    #     self.predict()
-        
-    #     # Run selected evaluation methods
-    #     if print_accuracy:
-    #         self.print_accuracy()
-            
-    #     if generate_report:
-    #         self.generate_classification_report()
-            
-    #     if plotting_confusion_matrix:
-    #         self.plot_confusion_matrix()
-            
-    #     if plot_feature_importances:
-    #         self.plot_feature_importances(top_n=top_features)
-
-
-    #     if analyze_instance_index is not None:
-    #         self.analyze_instance_with_shap(analyze_instance_index)
-
-
