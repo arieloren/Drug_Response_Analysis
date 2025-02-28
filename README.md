@@ -101,8 +101,7 @@ Inspected gene expression distributions and the proportion of Responders vs. Non
 
 **Outliers**:
 
-Basic checks conducted; no extreme outliers found, so data was retained as is.  
-as i always prefer to use domain knolage for outleir datection and less generic sttastistic method  
+Basic checks were conducted, and no extreme outliers were found, so the data was retained as is. I always prefer to use domain knowledge for outlier detection rather than relying on generic statistical methods
 
 ### 2. Feature Selection
 
