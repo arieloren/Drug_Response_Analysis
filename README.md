@@ -53,6 +53,9 @@ Drug_Response_Analysis/
 │   │   ├── model_training.py
 │   │   ├── model_evaluation.py
 │   │   └── __init__.py
+│   ├── notebooks/
+│   │   ├── eda_analysis.ipynb
+│   │   ├── model_evaluation.ipynb
 │   ├── utils/
 │   │   ├── config.py
 │   │   └── __init__.py
