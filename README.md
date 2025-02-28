@@ -200,7 +200,7 @@ This will:
 - Load the data
 - Merge, preprocess, and select features
 - Train and evaluate the model
-- Print or save results
+- Print the results
 
 ---
 
