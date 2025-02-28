@@ -38,7 +38,7 @@ We aim to:
 ---
 
 ## Project Structure
-
+```
 Drug_Response_Analysis/
 ├── data/
 │   ├── gene_expression.csv
@@ -64,7 +64,7 @@ Drug_Response_Analysis/
 ├── run_tests.py
 ├── requirements.txt
 └── README.md
-
+```
 
 
 **Key Python scripts**:
@@ -101,7 +101,7 @@ Inspected gene expression distributions and the proportion of Responders vs. Non
 
 **Outliers**:
 
-Basic checks were conducted, and no extreme outliers were found, so the data was retained as is. I always prefer to use domain knowledge for outlier detection rather than relying on generic statistical methods
+Basic checks were conducted, and no extreme outliers were found, so the data was retained as is.
 
 ### 2. Feature Selection
 
@@ -119,6 +119,7 @@ The approach was inspired by this reference:
 
 The 10 chosen features are:
 
+```
 ['225591_at',
  '218430_s_at',
  '242842_at',
@@ -129,6 +130,7 @@ The 10 chosen features are:
  '1559434_at',
  '1566748_at',
  '223878_at']
+```
 
 It's interesting to note that their names follow a similar pattern. In the EDA part, it would be valuable to examine if they cluster together based on gene names.
 
@@ -190,7 +192,7 @@ pip install -r requirements.txt
 If needed, update file paths in `src/utils/config.py` or wherever the CSV paths are defined.
 
 ### Run the Main Pipeline
-If `main.py` orchestrates the entire process, execute:
+`main.py` orchestrates the entire process:
 ```
 python src/main.py
 ```
@@ -216,6 +218,16 @@ This will execute all tests in the `tests/` folder, including:
 - Evaluation tests
 
 ---
+### ⚠ Known Issue  
+
+There is an issue with `test_xgboost_training`, specifically with:  
+
+```python
+self.assertEqual(model.n_estimators, 100)
+```
+
+Even though 100 is the initial parameter for XGBoost, the assertion fails.
+I haven't had time to investigate the cause yet, so please be aware of this when running tests.
 
 ## Dependencies
 
