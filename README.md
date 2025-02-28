@@ -24,7 +24,7 @@ This repository contains Drug Response Analysis . The goal is to analyze gene ex
 ## Overview
 
 We have:
-- **`gene_expression.csv`**: Contains gene expression levels. Rows are samples, columns are genes.
+- **`gene_expression.csv`**: Contains gene expression levels. columns are samples, Rows are genes.
 - **`meta_data.csv`**: Contains metadata such as SampleID, Response (binary), DAS28 clinical score, and Gender.
 
 We aim to:
