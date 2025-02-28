@@ -242,5 +242,6 @@ All required packages are listed in `requirements.txt`. The core dependencies in
 - **matplotlib**
 - **seaborn**
 - **joblib**
+- **plotly**
 - `unittest` (included in Python’s standard library, no separate installation needed)
 
