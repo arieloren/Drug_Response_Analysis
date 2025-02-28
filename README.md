@@ -83,41 +83,40 @@ Drug_Response_Analysis/
 
 ---
 
-Approach Summary
-1. Exploratory Data Analysis (EDA)
+## Approach Summary
 
-Data Loading: Read both CSV files into Pandas DataFrames.
-Merging: Match samples by SampleID into a single combined DataFrame.
-Missing Data:
+### 1. Exploratory Data Analysis (EDA)
 
-Checked for null values in gene expression and metadata (especially Response).
-Rows with missing Response are dropped if needed to keep the classification label consistent.
-we lots almost half of the data points
+**Data Loading**: Read both CSV files into Pandas DataFrames.  
+**Merging**: Match samples by SampleID into a single combined DataFrame.  
+**Missing Data**:
 
-Distributions:
+Checked for null values in gene expression and metadata (especially Response).  
+Rows with missing Response are dropped if needed to keep the classification label consistent.  
+we lots almost half of the data points  
 
-Inspected gene expression distributions and the proportion of Responders vs. Non-Responders.
+**Distributions**:
 
+Inspected gene expression distributions and the proportion of Responders vs. Non-Responders.  
 
-Outliers:
+**Outliers**:
 
-Basic checks conducted; no extreme outliers found, so data was retained as is.
-as i always prefer to use domain knolage for outleir datection and less generic sttastistic method
+Basic checks conducted; no extreme outliers found, so data was retained as is.  
+as i always prefer to use domain knolage for outleir datection and less generic sttastistic method  
 
-2. Feature Selection
+### 2. Feature Selection
 
 Used Lasso (L1) Logistic Regression to identify top genes associated with the binary response:
 
-Split data into X (all genes + selected metadata) and y (Response).
-Standard-scaled continuous features.
-Fit a Lasso Logistic Regression with cross-validation.
-Extract non-zero coefficients as "significant" genes.
+- Split data into X (all genes + selected metadata) and y (Response).  
+- Standard-scaled continuous features.  
+- Fit a Lasso Logistic Regression with cross-validation.  
+- Extract non-zero coefficients as "significant" genes.  
 
+Returned the top 10 genes with the highest absolute coefficients.  
 
-Returned the top 10 genes with the highest absolute coefficients.
-
-The approach was inspired by this reference:
-#https://datascience.stackexchange.com/questions/12455/feature-selection-for-gene-expression-dataset
+The approach was inspired by this reference:  
+#https://datascience.stackexchange.com/questions/12455/feature-selection-for-gene-expression-dataset  
 
 The 10 chosen features are:
 
@@ -134,39 +133,41 @@ The 10 chosen features are:
 
 It's interesting to note that their names follow a similar pattern. In the EDA part, it would be valuable to examine if they cluster together based on gene names.
 
+### 3. Predictive Modeling
 
-3. Predictive Modeling
-The model explored:
+**The model explored**:
 
-XGBoost Classifier:
-- Handles non-linearities and often performs well in tabular data tasks.
-- Trained with default parameters. Future work will include cross-validation and hyperparameter tuning for optimal performance.
+**XGBoost Classifier**:  
+- Handles non-linearities and often performs well in tabular data tasks.  
+- Trained with default parameters. Future work will include cross-validation and hyperparameter tuning for optimal performance.  
 
-Training/Validation:
-- An 80/15 train/validation split was used. For future work, cross-validation or LOO (we have a small dataset) could be good.
-- Metrics computed:
-  - Accuracy
-  - Precision/Recall/F1
+**Training/Validation**:  
+- An 80/15 train/validation split was used. For future work, cross-validation or LOO (we have a small dataset) could be good.  
+- Metrics computed:  
+  - Accuracy  
+  - Precision/Recall/F1  
 
-Note that since the data was balanced, accuracy was an appropriate metric.
+Note that since the data was balanced, accuracy was an appropriate metric.  
 
-Confusion Matrix:
-- Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.
+**Confusion Matrix**:  
+- Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.  
 
-4. Model Explainability
-- As we used a tree-based model, I easily extracted the most significant features from both the 10 selected features from the previous task and the metadata features, which were found to not contribute significantly.
+### 4. Model Explainability
 
-- Used SHAP to interpret individual predictions:
-  - Calculated SHAP values for each feature to see which contribute most to predicted response.
-  - Provided force plots and waterfall plots for explanation.
+- As we used a tree-based model, I easily extracted the most significant features from both the 10 selected features from the previous task and the metadata features, which were found to not contribute significantly.  
 
-5. Key Findings
+- Used SHAP to interpret individual predictions:  
+  - Calculated SHAP values for each feature to see which contribute most to predicted response.  
+  - Provided force plots and waterfall plots for explanation.  
 
-- **Top Genes:** Listed 10 genes with highest absolute Lasso coefficients.
-- **Model Performance:** Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.
-- **Clinical Relevance:** Most genes were less relevant in this project, and the metadata features weren't helpful for classification.
+### 5. Key Findings
+
+- **Top Genes**: Listed 10 genes with highest absolute Lasso coefficients.  
+- **Model Performance**: Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.  
+- **Clinical Relevance**: Most genes were less relevant in this project, and the metadata features weren't helpful for classification.  
 
 ---
+
 # How to Run
 
 ## 1. Environment Setup
@@ -175,13 +176,6 @@ Confusion Matrix:
 ```
 git clone https://github.com/arieloren/Drug_Response_Analysis.git
 cd Drug_Response_Analysis
-```
-
-### Create and activate a virtual environment (optional but recommended)
-```
-python -m venv venv
-source venv/bin/activate  # On macOS/Linux
-venv\Scripts\activate     # On Windows
 ```
 
 ### Install dependencies:
