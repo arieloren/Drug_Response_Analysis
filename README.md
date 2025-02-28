@@ -161,6 +161,8 @@ Note that since the data was balanced, accuracy was an appropriate metric.
   - Calculated SHAP values for each feature to see which contribute most to predicted response.  
   - Provided force plots and waterfall plots for explanation.  
 
++ **Note**: The full EDA and model evaluation analysis can be found in the `notebooks/` folder.
+
 ### 5. Key Findings
 
 - **Top Genes**: Listed 10 genes with highest absolute Lasso coefficients.  
