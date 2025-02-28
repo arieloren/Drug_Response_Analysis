@@ -1,4 +1,4 @@
-# Drug Response Analysis: Gene Expression & Patient Metadata
+# Drug Response Analysis
 
 This repository contains Drug Response Analysis . The goal is to analyze gene expression and clinical metadata to predict treatment response (Responder vs. Non-Responder) in an autoimmune disease study.
 
