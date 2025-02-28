@@ -164,8 +164,8 @@ Note that since the data was balanced, accuracy was an appropriate metric.
 ### 5. Key Findings
 
 - **Top Genes**: Listed 10 genes with highest absolute Lasso coefficients.  
-- **Model Performance**: Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.  
-- **Clinical Relevance**: Most genes were less relevant in this project, and the metadata features weren't helpful for classification.  
+- **Model Performance**: Accuracy and F1 score are approximately 60%. Since the data is balanced, precision and recall have similar values. It's important to note that there is clear overfitting (which is common with XGBoost when parameters are not properly selected). Better results could likely be achieved by choosing a simpler model or fine-tuning feature selection. However, since this is a baseline solution for the task, I kept it as is. 
+- **Clinical Relevance**: Most genes were less relevant in this project, and the metadata features weren't informative.  
 
 ---
 
