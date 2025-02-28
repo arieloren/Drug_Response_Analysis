@@ -139,92 +139,103 @@ It's interesting to note that their names follow a similar pattern. In the EDA p
 The model explored:
 
 XGBoost Classifier:
-
-Handles non-linearities and often performs well in tabular data tasks.
-Trained with default parameters. Future work will include cross-validation and hyperparameter tuning for optimal performance.
-
-
+- Handles non-linearities and often performs well in tabular data tasks.
+- Trained with default parameters. Future work will include cross-validation and hyperparameter tuning for optimal performance.
 
 Training/Validation:
-
-An 80/15 train/validation split was used, for future work, cross validation or LOO (we have small dataset) could be good
-Metrics computed:
-
-Accuracy
-Precision/Recall/F1
-
-
+- An 80/15 train/validation split was used. For future work, cross-validation or LOO (we have a small dataset) could be good.
+- Metrics computed:
+  - Accuracy
+  - Precision/Recall/F1
 
 Note that since the data was balanced, accuracy was an appropriate metric.
+
 Confusion Matrix:
-
-Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.
-
+- Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.
 
 4. Model Explainability
-As we used a tree-based model, I easily extracted the most significant features from both the 10 selected features from the previous task and the metadata features, which were found to not contribute significantly.
+- As we used a tree-based model, I easily extracted the most significant features from both the 10 selected features from the previous task and the metadata features, which were found to not contribute significantly.
 
-Used SHAP to interpret individual predictions:
-
-Calculated SHAP values for each feature to see which contribute most to predicted response.
-Provided force plots and waterfall plots for explanation.
+- Used SHAP to interpret individual predictions:
+  - Calculated SHAP values for each feature to see which contribute most to predicted response.
+  - Provided force plots and waterfall plots for explanation.
 
 5. Key Findings
 
-Top Genes: Listed 10 genes with highest absolute Lasso coefficients.
-Model Performance: Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.
-Clinical Relevance: Most genes were less relevant in this project, and the metadata features weren't helpful for classification.
+- **Top Genes:** Listed 10 genes with highest absolute Lasso coefficients.
+- **Model Performance:** Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.
+- **Clinical Relevance:** Most genes were less relevant in this project, and the metadata features weren't helpful for classification.
 
 ---
-How to Run
-1. Environment Setup
+# How to Run
 
-Clone this repository:
-bashCopygit clone https://github.com/arieloren/Drug_Response_Analysis.git
+## 1. Environment Setup
+
+### Clone this repository:
+```
+git clone https://github.com/arieloren/Drug_Response_Analysis.git
 cd Drug_Response_Analysis
+```
 
-Create and activate a virtual environment (optional but recommended).
-Install dependencies:
-bashCopypip install -r requirements.txt
+### Create and activate a virtual environment (optional but recommended)
+```
+python -m venv venv
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate     # On Windows
+```
 
+### Install dependencies:
+```
+pip install -r requirements.txt
+```
 
-2. Running the Code
+---
 
-(Optional) Update file paths in src/utils/config.py or wherever the CSV paths are defined, if needed.
-Run the main pipeline (if main.py orchestrates everything):
-bashCopypython src/main.py
+## 2. Running the Code
+
+### (Optional) Update File Paths
+If needed, update file paths in `src/utils/config.py` or wherever the CSV paths are defined.
+
+### Run the Main Pipeline
+If `main.py` orchestrates the entire process, execute:
+```
+python src/main.py
+```
 This will:
+- Load the data
+- Merge, preprocess, and select features
+- Train and evaluate the model
+- Print or save results
 
-Load the data
-Merge, preprocess, and select features
-Train and evaluate the model
-Print or save results
+---
 
+## 3. Running Unit Tests
 
-
-3. Running Unit Tests
-We use unittest for testing. From the project root, run:
-using the run_tests.py script
-
+We use `unittest` for testing. To run all tests, use the `run_tests.py` script from the project root:
+```
 $env:PYTHONPATH="src"; python -m unittest discover -s tests
+```
 
-This will run all tests in the tests/ folder:
+This will execute all tests in the `tests/` folder, including:
+- Preprocessing tests
+- Feature selection tests
+- Model training tests
+- Evaluation tests
 
-Preprocessing tests
-Feature Selection tests
-Model Training tests
-Evaluation tests
+---
 
-Dependencies
-All required packages are listed in requirements.txt. The core ones include:
+## Dependencies
 
-python >= 3.8
-pandas
-numpy
-scikit-learn
-xgboost
-shap
-matplotlib
-seaborn
-joblib
-unittest (standard library, no separate install needed)
+All required packages are listed in `requirements.txt`. The core dependencies include:
+
+- **Python** >= 3.8
+- **pandas**
+- **numpy**
+- **scikit-learn**
+- **xgboost**
+- **shap**
+- **matplotlib**
+- **seaborn**
+- **joblib**
+- `unittest` (included in Python’s standard library, no separate installation needed)
+
