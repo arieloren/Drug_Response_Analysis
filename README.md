@@ -33,7 +33,7 @@ We aim to:
 3. Train a **classification model** (XGBoost) to predict treatment response.
 4. Evaluate performance using accuracy, precision, recall, F1-score, and confusion matrix.
 5. Demonstrate **explainability** with SHAP values and Feature importance .
-6. Provide **unit tests** demonstrating good coding practices.
+6. Provide **unit tests** 
 
 ---
 
@@ -63,7 +63,9 @@ Drug_Response_Analysis/
 │   ├── test_evaluation.py
 ├── run_tests.py
 ├── requirements.txt
-└── README.md 
+└── README.md
+
+
 
 **Key Python scripts**:
 - `src/preprocessing/preprocess.py`  
@@ -178,7 +180,7 @@ How to Run
 1. Environment Setup
 
 Clone this repository:
-bashCopygit clone https://github.com/YourUsername/Drug_Response_Analysis.git
+bashCopygit clone https://github.com/arieloren/Drug_Response_Analysis.git
 cd Drug_Response_Analysis
 
 Create and activate a virtual environment (optional but recommended).
