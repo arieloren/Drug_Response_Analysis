@@ -1,6 +1,6 @@
 # Drug Response Analysis: Gene Expression & Patient Metadata
 
-This repository contains the solution to the take-home exam for a Data Scientist position. The goal is to analyze gene expression and clinical metadata to predict treatment response (Responder vs. Non-Responder) in an autoimmune disease study.
+This repository contains Drug Response Analysis . The goal is to analyze gene expression and clinical metadata to predict treatment response (Responder vs. Non-Responder) in an autoimmune disease study.
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -17,7 +17,7 @@ This repository contains the solution to the take-home exam for a Data Scientist
    2. [Running the Code](#running-the-code)
    3. [Running Unit Tests](#running-unit-tests)
 6. [Dependencies](#dependencies)
-7. [Contact](#contact)
+
 
 ---
 
@@ -30,7 +30,7 @@ We have:
 We aim to:
 1. Perform an **EDA** to understand the dataset distribution and handle missing data.
 2. Identify top features (genes) that are most predictive of response.
-3. Train a **classification model** (Logistic Regression with L1 regularization and/or XGBoost) to predict treatment response.
+3. Train a **classification model** (XGBoost) to predict treatment response.
 4. Evaluate performance using accuracy, precision, recall, F1-score, and confusion matrix.
 5. Demonstrate **explainability** with SHAP values and Feature importance .
 6. Provide **unit tests** demonstrating good coding practices.
@@ -81,120 +81,138 @@ Drug_Response_Analysis/
 
 ---
 
-## Data Description
+Approach Summary
+1. Exploratory Data Analysis (EDA)
 
-1. **gene_expression.csv**  
-   - Each row corresponds to a patient sample.  
-   - Columns include:
-     - `ID_REF`: If present, a unique gene reference or probe ID.
-     - `GENE1`, `GENE2`, ..., `GENE_N`: Expression values for each gene.
+Data Loading: Read both CSV files into Pandas DataFrames.
+Merging: Match samples by SampleID into a single combined DataFrame.
+Missing Data:
 
-2. **meta_data.csv**  
-   - `SampleID`: Unique sample/patient identifier (matches gene_expression).  
-   - `Response`: Binary label (`Responder`, `Non_Responder`).  
-   - `DAS28`: Disease Activity Score (continuous numeric).  
-   - `Gender`: `Male` or `Female`.  
+Checked for null values in gene expression and metadata (especially Response).
+Rows with missing Response are dropped if needed to keep the classification label consistent.
+we lots almost half of the data points
+
+Distributions:
+
+Inspected gene expression distributions and the proportion of Responders vs. Non-Responders.
+
+
+Outliers:
+
+Basic checks conducted; no extreme outliers found, so data was retained as is.
+as i always prefer to use domain knolage for outleir datection and less generic sttastistic method
+
+2. Feature Selection
+
+Used Lasso (L1) Logistic Regression to identify top genes associated with the binary response:
+
+Split data into X (all genes + selected metadata) and y (Response).
+Standard-scaled continuous features.
+Fit a Lasso Logistic Regression with cross-validation.
+Extract non-zero coefficients as "significant" genes.
+
+
+Returned the top 10 genes with the highest absolute coefficients.
+
+The approach was inspired by this reference:
+#https://datascience.stackexchange.com/questions/12455/feature-selection-for-gene-expression-dataset
+
+The 10 chosen features are:
+
+['225591_at',
+ '218430_s_at',
+ '242842_at',
+ '1558887_at',
+ '225187_at',
+ '216573_at',
+ '238141_s_at',
+ '1559434_at',
+ '1566748_at',
+ '223878_at']
+
+It's interesting to note that their names follow a similar pattern. In the EDA part, it would be valuable to examine if they cluster together based on gene names.
+
+
+3. Predictive Modeling
+The model explored:
+
+XGBoost Classifier:
+
+Handles non-linearities and often performs well in tabular data tasks.
+Trained with default parameters. Future work will include cross-validation and hyperparameter tuning for optimal performance.
+
+
+
+Training/Validation:
+
+An 80/15 train/validation split was used, for future work, cross validation or LOO (we have small dataset) could be good
+Metrics computed:
+
+Accuracy
+Precision/Recall/F1
+
+
+
+Note that since the data was balanced, accuracy was an appropriate metric.
+Confusion Matrix:
+
+Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.
+
+
+4. Model Explainability
+As we used a tree-based model, I easily extracted the most significant features from both the 10 selected features from the previous task and the metadata features, which were found to not contribute significantly.
+
+Used SHAP to interpret individual predictions:
+
+Calculated SHAP values for each feature to see which contribute most to predicted response.
+Provided force plots and waterfall plots for explanation.
+
+5. Key Findings
+
+Top Genes: Listed 10 genes with highest absolute Lasso coefficients.
+Model Performance: Accuracy and F1 score approximately 0.60%. Since the data is balanced, precision and recall are at similar values. I should note that we clearly have overfitting (common with XGBoost without proper hyperparameter tuning) and could likely achieve better results. As this is a baseline solution for the task, I kept it as is.
+Clinical Relevance: Most genes were less relevant in this project, and the metadata features weren't helpful for classification.
 
 ---
+How to Run
+1. Environment Setup
 
-## Approach Summary
-
-### 1. Exploratory Data Analysis (EDA)
-
-- **Data Loading**: Read both CSV files into Pandas DataFrames.
-- **Merging**: Match samples by `SampleID` into a single combined DataFrame.
-- **Missing Data**:  
-  - Checked for null values in gene expression and metadata (especially `Response`).
-  - Rows with missing `Response` are dropped if needed to keep the classification label consistent.
-- **Distributions**:  
-  - Inspected gene expression distributions and the proportion of Responders vs. Non-Responders.
-- **Outliers**:  
-  - Basic checks; didnt find any extreme outleirs, so i kept the data
-
-### 2. Feature Selection
-
-- Used **Lasso (L1) Logistic Regression** to identify top genes associated with the binary response:
-  1. Split data into `X` (all genes + selected metadata) and `y` (`Response`).
-  2. Standard-scaled continuous features.
-  3. Fit a Lasso Logistic Regression with cross-validation.
-  4. Extract non-zero coefficients as “significant” genes.
-- Returned the **top 10 genes** with the highest absolute coefficients.
-
-### 3. Predictive Modeling
-
-the modelsexplored:
-2. **XGBoost Classifier**:
-   - Handles non-linearities and often performs well in tabular data tasks.
-   - Trained with default parameters future work will have cross-validation for best hyperparameters (optional).
-
-**Training/Validation**:
-- A train/validation split (e.g., 80/15) was used.
-- Metrics computed:
-  - **Accuracy**
-  - **Precision/Recall/F1**
-  but we have to see that the data was balanced so accuracy is a fit for the job
-
-**Confusion Matrix**:
-- Visualized how many Responders vs. Non-Responders were correctly/incorrectly classified.
-
-### 4. Model Explainability
-as we used a tree based model, i extracted easly the most sugnificat features from both the 10 selected features from prev task, and the metadata features, that i figure out didnt helpt much
-- Used **SHAP** to interpret individual predictions:
-  - Calculated SHAP values for each feature to see which contribute most to predicted response.
-  - Provided force plots and waterfall plots for explanation.
-
-### 5. Key Findings
-
-- **Top Genes**: Listed 10 genes with highest absolute Lasso coefficients.
-- **Model Performance**: Accuracy and F1 ~ XX%, with a certain trade-off between precision and recall.
-- **Clinical Relevance**: Genes consistently associated with immune/inflammatory processes appear among the top features.
-
----
-
-## How to Run
-
-### 1. Environment Setup
-
-1. **Clone** this repository:
-   ```bash
-   git clone https://github.com/YourUsername/Drug_Response_Analysis.git
-   cd Drug_Response_Analysis
+Clone this repository:
+bashCopygit clone https://github.com/YourUsername/Drug_Response_Analysis.git
+cd Drug_Response_Analysis
 
 Create and activate a virtual environment (optional but recommended).
 Install dependencies:
-bash
-Copy
-Edit
-pip install -r requirements.txt
+bashCopypip install -r requirements.txt
+
+
 2. Running the Code
+
 (Optional) Update file paths in src/utils/config.py or wherever the CSV paths are defined, if needed.
 Run the main pipeline (if main.py orchestrates everything):
-bash
-Copy
-Edit
-python src/main.py
+bashCopypython src/main.py
 This will:
+
 Load the data
-Merge, preprocess, feature-select
+Merge, preprocess, and select features
 Train and evaluate the model
 Print or save results
+
+
+
 3. Running Unit Tests
 We use unittest for testing. From the project root, run:
+using the run_tests.py script
 
-bash
-Copy
-Edit
-# Option A: using the run_tests.py script
-python run_tests.py
+$env:PYTHONPATH="src"; python -m unittest discover -s tests
 
-# Option B: via unittest discover
-python -m unittest discover -s tests
 This will run all tests in the tests/ folder:
 
 Preprocessing tests
 Feature Selection tests
 Model Training tests
 Evaluation tests
+
 Dependencies
 All required packages are listed in requirements.txt. The core ones include:
 
@@ -208,4 +226,3 @@ matplotlib
 seaborn
 joblib
 unittest (standard library, no separate install needed)
-
