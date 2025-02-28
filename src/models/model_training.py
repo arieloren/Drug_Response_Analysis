@@ -2,8 +2,6 @@ import os
 os.chdir("..")  # Moves one directory up
 from utils.config import base_path
 import joblib  
-
-
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -22,6 +20,7 @@ def train_xgboost_classifier(X_train, y_train, model_name="xgboost_model.pkl"):
     """
 
     model = xgb.XGBClassifier(
+        n_estimators=100,
         objective="binary:logistic",
         eval_metric="logloss",
         random_state=42,
@@ -29,13 +28,11 @@ def train_xgboost_classifier(X_train, y_train, model_name="xgboost_model.pkl"):
 
     model.fit(X_train, y_train)
 
-    # ✅ Define model save path
     model_path = os.path.join(base_path, "models", model_name)
 
-    # ✅ Ensure the directory exists
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
 
-    # ✅ Save model
+    #Save model
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
 
